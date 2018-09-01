@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}{{g.title}}{% endblock %}
+{% block body %}
+{% if rendered_html%}
+<div class="markdown">
+{{ rendered_html | safe()}}
+</div>
+{% else %}
+    <h2>Nothing is New...</h2>
+{% endif %}
+{% if recs %}
+    {% for rec in recs %}
+    <p><a href="{{url_for('news.edit')}}{% if rec.slug %}{{rec.slug}}{% else %}{{rec.id}}{% endif %}/">{{ rec.title }}</a></p>
+    {% endfor %}
+{% endif %}
+
+{% endblock body%}

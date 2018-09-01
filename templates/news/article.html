@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}{{g.title}}{% endblock %}
+{% block body %}
+{% if rendered_html%}
+<div class="markdown">
+{{ rendered_html | safe()}}
+</div>
+{% else %}
+    <h2>Nothing is New...</h2>
+{% endif %}
+{% endblock body%}
