@@ -10,7 +10,7 @@
 {% endif %}
 {% if recs %}
     {% for rec in recs %}
-    <p><a href="{{url_for('news.edit')}}{% if rec.slug %}{{rec.slug}}{% else %}{{rec.id}}{% endif %}/">{{ rec.title }}</a></p>
+    <p><a href="{{url_for('news.view')}}{% if rec.slug %}{{rec.slug}}{% else %}{{rec.id}}{% endif %}/">{{ rec.title }}</a></p>
     {% endfor %}
 {% endif %}
 

@@ -9,7 +9,7 @@
             <p><span>Title:</span><input type="text" size="30" name="title" required value="{{ rec.title|default('',True )}}" /></p>
             <p><span>Slug:</span><input type="text" size="30" name="slug" value="{{ rec.slug|default('',True )}}" /></p>
             <p><span>Pub. Date:</span><input type="date" size="10" name="publication_date" value="{{ rec.publication_date|default('',True )}}" /></p>
-            <p><span>Article: </span>
+            <p><span>Article: </span><em>Don't forget to include the title in the article if you want it to be displayed</em><br>
                 <textarea name="words" rows="20" cols="80">{{ rec.words|default('',True )}}</textarea></p>
         </fieldset>
     </form>

@@ -1,7 +1,14 @@
 {% extends "layout.html" %}
 {% block title %}{{g.title}}{% endblock %}
 {% block body %}
+
+<p><a href="{{ url_for('news.display')}}">Return to News...</a></p>
 {% if rendered_html%}
+{% if g.admin.has_access(g.user,Article) %}
+<p>
+    <a href="{{url_for('news.edit')}}{{rec.id}}">Edit this article</a>
+</p>
+{% endif %}
 <div class="markdown">
 {{ rendered_html | safe()}}
 </div>

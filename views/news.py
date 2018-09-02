@@ -1,7 +1,7 @@
 from flask import request, session, g, redirect, url_for, abort, \
      render_template, flash, Blueprint, Response
 from users.admin import login_required, table_access_required
-from users.utils import cleanRecordID, printException, render_markdown_for
+from users.utils import cleanRecordID, printException, render_markdown_for, render_markdown_text
 from news.models import Article
 from datetime import datetime, timedelta
 
@@ -10,9 +10,10 @@ mod = Blueprint('news',__name__, template_folder='../templates', url_prefix='/ne
 
 def setExits():
     g.homeURL = url_for('.display')
+    g.listURL = g.homeURL
     g.editURL = url_for('.edit')
-    g.listURL = url_for('.display')
     g.deleteURL = url_for('.delete')
+    g.viewURL = url_for('.view',article_handle = -1)
     g.title = 'News'
 
 @mod.route('/', methods=["GET",])
@@ -27,6 +28,28 @@ def display():
         rendered_html=rendered_html, recs = recs,
         )    
 
+@mod.route('/view', methods=["GET",])
+@mod.route('/view/', methods=["GET",])
+@mod.route('/view/<article_handle>', methods=["GET",])
+@mod.route('/view/<article_handle>/', methods=["GET",])
+def view(article_handle=-1):
+    setExits()
+    
+    rec = Article(g.db).get(article_handle)
+    if not rec:
+        flash("That article could not be found.")
+        return redirect(g.homeURL)
+        
+    g.title = rec.title
+    if len(rec.title) > 20:
+        g.title = rec.title[:20] + "..."
+    
+    rendered_html = render_markdown_text(rec.words)
+        
+    return render_template('news/article.html',
+        rendered_html=rendered_html, rec=rec,
+        )       
+    
 @mod.route('/edit', methods=["GET","POST"])
 @mod.route('/edit/', methods=["GET","POST"])
 @mod.route('/edit/<article_handle>', methods=["GET","POST"])
@@ -36,28 +59,37 @@ def edit(article_handle='0'):
     setExits()
     g.title = "Article"
     articles = Article(g.db)
-    rec_id = None
     
-    #Is the handle an existing slug?
-    if len(article_handle) > 0:
-        # The slug is arbitrary text, so be careful!!!
-        sql = 'select * from article where slug = ? order by id'
-        rec = articles.select_one_raw(sql,(article_handle,))
-    if not rec:
-        rec_id = cleanRecordID(article_handle)
-        if rec_id < 0:
-            #is the handle < o? ... bad request, go home
-            flash('That is not a valid article slug')
-            return redirect(g.homeURL)
-            
-        if rec_id > 0:
-            rec = articles.get(rec_id)
-            if not rec:
-                flash('That is not a valid article id')
-                return redirect(g.homeURL)
-        else:
-            #is the handle zero?  ... make a new record
-            rec = articles.new()
+    #import pdb; pdb.set_trace()
+    rec_id = cleanRecordID(article_handle)
+    rec = articles.get(article_handle)
+    if not rec and not rec_id == 0:
+        flash('Could not find that artcle')
+        return redirect(g.homeURL)
+    
+    if rec_id == 0:
+        rec = articles.new()
+    
+    ##Is the handle an existing slug?
+    #if len(article_handle) > 0:
+    #    # The slug is arbitrary text, so be careful!!!
+    #    sql = 'select * from article where slug = ?'
+    #    rec = articles.select_one_raw(sql,(article_handle,))
+    #if not rec:
+    #    rec_id = cleanRecordID(article_handle)
+    #    if rec_id < 0:
+    #        #is the handle < o? ... bad request, go home
+    #        flash('That is not a valid article slug')
+    #        return redirect(g.homeURL)
+    #        
+    #    if rec_id > 0:
+    #        rec = articles.get(rec_id)
+    #        if not rec:
+    #            flash('That is not a valid article id')
+    #            return redirect(g.homeURL)
+    #    else:
+    #        #is the handle zero?  ... make a new record
+    #        rec = articles.new()
     
     
     #Is there a form?
