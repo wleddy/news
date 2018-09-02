@@ -10,8 +10,14 @@
 {% endif %}
 {% if recs %}
     {% for rec in recs %}
-    <p><a href="{{url_for('news.view')}}{% if rec.slug %}{{rec.slug}}{% else %}{{rec.id}}{% endif %}/">{{ rec.title }}</a></p>
+    <h4 ><a href="{{url_for('news.view')}}{% if rec.slug %}{{rec.slug}}{% else %}{{rec.id}}{% endif %}/">{{ rec.title }}</a></h4>
+    <div style="padding-left:1.5em;">
+    <p  style="color:#666;font-style:italic;">Published: {{rec.publication_date}}</p>
+    <p>{{rec.words[:120]}} ...</p>
+    </div>
     {% endfor %}
+{% else %}
+<h4>No News yet...</h4>
 {% endif %}
 
 {% endblock body%}

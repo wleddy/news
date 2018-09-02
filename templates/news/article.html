@@ -9,6 +9,8 @@
     <a href="{{url_for('news.edit')}}{{rec.id}}">Edit this article</a>
 </p>
 {% endif %}
+<h2>{{rec.title}}</h2>
+<p class="news-date" style="color:#666;font-style:italic;">Published: {{rec.publication_date}}</p>
 <div class="markdown">
 {{ rendered_html | safe()}}
 </div>
