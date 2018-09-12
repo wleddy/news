@@ -8,9 +8,22 @@
     		<input type=hidden name="id" value="{{rec.id|default('0',True )}}">
             <p><span>Title:</span><input type="text" size="30" name="title" required value="{{ rec.title|default('',True )}}" /></p>
             <p><span>Slug:</span><input type="text" size="30" name="slug" value="{{ rec.slug|default('',True )}}" /></p>
-            <p><span>Pub. Date:</span><input type="date" size="10" name="publication_date" value="{{ rec.publication_date|default('',True )}}" /></p>
+            <p>
+                <span>Pub. Date:</span>
+                <input type="date" size="10" name="publication_date" id="publication_date" value="{{ rec.publication_date|short_date_string |default('',True )}}" />
+                &nbsp;&nbsp;<input type="button" name="now" value="now" id="now" 
+                onclick = '$("#publication_date").val(get_date())'
+                />
+            </p>
             <p><span>Article: </span>
                 <textarea name="words" rows="20" cols="80">{{ rec.words|default('',True )}}</textarea></p>
         </fieldset>
     </form>
+    
+    <script>
+        function get_date(){
+            d = new Date();
+            return (d.getMonth() + 1 ) + "/" + d.getDate() + "/" + d.getFullYear();
+        }
+    </script>
 {% endblock body %}

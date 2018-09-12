@@ -1,8 +1,8 @@
 from flask import request, session, g, redirect, url_for, abort, \
      render_template, flash, Blueprint, Response
 from users.admin import login_required, table_access_required
-from users.utils import cleanRecordID, printException, render_markdown_for, render_markdown_text
-from news.models import Article
+from users.utils import cleanRecordID, printException, render_markdown_for, render_markdown_text,getDatetimeFromString
+from news.models import Article 
 from datetime import datetime, timedelta
 
 mod = Blueprint('news',__name__, template_folder='../templates', url_prefix='/news')
@@ -68,29 +68,7 @@ def edit(article_handle='0'):
         return redirect(g.homeURL)
     
     if rec_id == 0:
-        rec = articles.new()
-    
-    ##Is the handle an existing slug?
-    #if len(article_handle) > 0:
-    #    # The slug is arbitrary text, so be careful!!!
-    #    sql = 'select * from article where slug = ?'
-    #    rec = articles.select_one_raw(sql,(article_handle,))
-    #if not rec:
-    #    rec_id = cleanRecordID(article_handle)
-    #    if rec_id < 0:
-    #        #is the handle < o? ... bad request, go home
-    #        flash('That is not a valid article slug')
-    #        return redirect(g.homeURL)
-    #        
-    #    if rec_id > 0:
-    #        rec = articles.get(rec_id)
-    #        if not rec:
-    #            flash('That is not a valid article id')
-    #            return redirect(g.homeURL)
-    #    else:
-    #        #is the handle zero?  ... make a new record
-    #        rec = articles.new()
-    
+        rec = articles.new()    
     
     #Is there a form?
     if request.form:
@@ -98,6 +76,9 @@ def edit(article_handle='0'):
         
         articles.update(rec,request.form)
         if valid_form(rec):
+            if request.form['publication_date']:
+                # convert to a date time
+                rec.publication_date = getDatetimeFromString(request.form['publication_date'])
             try:
                 articles.save(rec)
                 g.db.commit()
@@ -159,6 +140,7 @@ def valid_form(rec):
         if find_slug and len(find_slug) > 0:
             flash("The slug line must be unique")
         
+    # If present, the date must be valid format
     
     return valid_form
     
