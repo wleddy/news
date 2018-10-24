@@ -10,7 +10,7 @@
 </p>
 {% endif %}
 <h2>{{rec.title}}</h2>
-<p class="news-date" style="color:#666;font-style:italic;">Published: {{rec.publication_date}}</p>
+<p class="news-date" style="color:#666;font-style:italic;">Published: {{rec.publication_date | short_date_string }}</p>
 <div class="markdown">
 {{ rendered_html | safe()}}
 </div>
