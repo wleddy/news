@@ -138,9 +138,16 @@ def valid_form(rec):
         sql = 'select * from article where slug = ? and id <> ?'
         find_slug = Article(g.db).select_raw(sql,(slug,rec.id))
         if find_slug and len(find_slug) > 0:
+            valid_form = False
             flash("The slug line must be unique")
         
     # If present, the date must be valid format
+    publication_date = request.form.get('publication_date','').strip()
+    if publication_date:
+        test_date = getDatetimeFromString(publication_date)
+        if not test_date:
+            valid_form = False
+            flash('{} is not a valid date'.format(publication_date))
     
     return valid_form
     

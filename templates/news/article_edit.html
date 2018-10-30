@@ -10,7 +10,7 @@
             <p><span>Slug:</span><input type="text" size="30" name="slug" value="{{ rec.slug|default('',True )}}" /></p>
             <p>
                 <span>Pub. Date:</span>
-                <input type="date" size="10" name="publication_date" id="publication_date" value="{{ rec.publication_date|short_date_string |default('',True )}}" />
+                <input type="date" size="10" name="publication_date" id="publication_date" value="{{ rec.publication_date | iso_date_string |default('',True )}}" />
                 &nbsp;&nbsp;<input type="button" name="now" value="now" id="now" 
                 onclick = '$("#publication_date").val(get_date())'
                 />
