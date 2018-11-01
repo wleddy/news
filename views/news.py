@@ -1,9 +1,9 @@
 from flask import request, session, g, redirect, url_for, abort, \
      render_template, flash, Blueprint, Response
-from date_utils import getDatetimeFromString
+from takeabeltof.date_utils import getDatetimeFromString
 from news.models import Article 
 from users.admin import login_required, table_access_required
-from users.utils import cleanRecordID, printException, render_markdown_for, render_markdown_text
+from takeabeltof.utils import cleanRecordID, printException, render_markdown_for, render_markdown_text
 
 mod = Blueprint('news',__name__, template_folder='../templates', url_prefix='/news')
 

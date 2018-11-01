@@ -1,6 +1,6 @@
 # news models.py
 from users.models import SqliteTable
-from users.utils import cleanRecordID
+from takeabeltof.utils import cleanRecordID
 
 class Article(SqliteTable):
     def __init__(self,db_connection):
